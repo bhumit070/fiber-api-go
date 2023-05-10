@@ -1,13 +1,14 @@
 package common
 
 import (
-	"github.com/bhumit070/hmm/src/auth"
+	authV1 "github.com/bhumit070/hmm/src/apis/v1/auth"
+	"github.com/bhumit070/hmm/src/constants"
 	"github.com/gofiber/fiber/v2"
 )
 
 func RegisterRoutes(app *fiber.App) {
-	v1Routes := app.Group("/v1")
+	v1Routes := app.Group(constants.V1_PREFIX)
 
-	auth.RegisterAuthRoutes(v1Routes)
+	authV1.RegisterAuthRoutes(v1Routes)
 
 }

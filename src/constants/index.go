@@ -7,7 +7,8 @@ import (
 )
 
 var (
-	PORT string
+	PORT      string
+	V1_PREFIX string = "/v1"
 )
 
 func InitEnvVariables() {

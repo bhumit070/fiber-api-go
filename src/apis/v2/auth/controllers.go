@@ -27,7 +27,7 @@ func Login(ctx *fiber.Ctx) error {
 		})
 	}
 
-	body.ApiVersion = constants.V1_PREFIX
+	body.ApiVersion = constants.V2_PREFIX
 
 	return ctx.JSON(body)
 }

@@ -1,9 +1,9 @@
 package common
 
 import (
-	authV1 "github.com/bhumit070/hmm/src/apis/v1/auth"
-	authV2 "github.com/bhumit070/hmm/src/apis/v2/auth"
-	"github.com/bhumit070/hmm/src/constants"
+	authV1 "github.com/bhumit070/go_api_demo/src/apis/v1/auth"
+	authV2 "github.com/bhumit070/go_api_demo/src/apis/v2/auth"
+	"github.com/bhumit070/go_api_demo/src/constants"
 	"github.com/gofiber/fiber/v2"
 )
 

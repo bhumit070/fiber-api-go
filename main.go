@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/bhumit070/hmm/src/common"
-	"github.com/bhumit070/hmm/src/constants"
+	"github.com/bhumit070/go_api_demo/src/common"
+	"github.com/bhumit070/go_api_demo/src/constants"
 	"github.com/gofiber/fiber/v2"
 )
 

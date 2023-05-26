@@ -1,4 +1,4 @@
-module github.com/bhumit070/hmm
+module github.com/bhumit070/go_api_demo
 
 go 1.20
 

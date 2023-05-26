@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"github.com/bhumit070/hmm/src/constants"
+	"github.com/bhumit070/go_api_demo/src/constants"
 	"github.com/gofiber/fiber/v2"
 )
 

@@ -16,7 +16,7 @@ func main() {
 
 	common.RegisterRoutes(app)
 
-	log.Fatal(app.Listen(constants.PORT))
+	log.Fatal(app.Listen(":" + constants.PORT))
 
 	fmt.Println("Server is running on port", constants.PORT)
 

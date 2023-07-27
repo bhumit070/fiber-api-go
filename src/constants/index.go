@@ -1,6 +1,7 @@
 package constants
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -17,5 +18,5 @@ func InitEnvVariables() {
 	godotenv.Load(".env")
 
 	PORT = os.Getenv("PORT")
-
+	fmt.Println("PORT IS ", PORT)
 }

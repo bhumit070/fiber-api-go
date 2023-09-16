@@ -12,7 +12,9 @@ import (
 var DB *gorm.DB = nil
 
 func InitDB() {
-	db, err := gorm.Open(postgres.Open(constants.SQL_DB_URL), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(constants.SQL_DB_URL), &gorm.Config{
+		Logger: nil,
+	})
 
 	if err != nil {
 		panic("Failed to connect to database!")

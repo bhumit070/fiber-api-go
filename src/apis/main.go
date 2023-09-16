@@ -26,6 +26,7 @@ func RegisterRoutes(app *fiber.App) {
 
 	registerV1Routes(apiRouter)
 	registerV2Routes(apiRouter)
+
 	app.All("*", func(ctx *fiber.Ctx) error {
 		ctx.Status(404)
 		return ctx.JSON(helper.Response{

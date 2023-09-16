@@ -1,9 +1,10 @@
-package common
+package apis
 
 import (
 	authV1 "github.com/bhumit070/go_api_demo/src/apis/v1/auth"
 	authV2 "github.com/bhumit070/go_api_demo/src/apis/v2/auth"
 	"github.com/bhumit070/go_api_demo/src/constants"
+	"github.com/bhumit070/go_api_demo/src/helper"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -25,4 +26,11 @@ func RegisterRoutes(app *fiber.App) {
 
 	registerV1Routes(apiRouter)
 	registerV2Routes(apiRouter)
+	app.All("*", func(ctx *fiber.Ctx) error {
+		ctx.Status(404)
+		return ctx.JSON(helper.Response{
+			Code:    404,
+			Message: "Route Not Found!",
+		})
+	})
 }

@@ -89,6 +89,25 @@ func Register(ctx *fiber.Ctx) error {
 		})
 	}
 
+	var existingUser SignupResponse
+	findingExistingUserError := db.DB.Model(&models.UserModel{}).First(&existingUser, "email = ?", body.Email).Error
+
+	if findingExistingUserError != nil && findingExistingUserError.Error() != "record not found" {
+		return helper.SendResponse(ctx, helper.Response{
+			Code:    400,
+			Message: "Something went wrong, please try again later!",
+			Data:    nil,
+		})
+	}
+
+	if existingUser.Email == body.Email {
+		return helper.SendResponse(ctx, helper.Response{
+			Code:    400,
+			Message: "Email already exists!",
+			Data:    nil,
+		})
+	}
+
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(body.Password), 10)
 	if err != nil {
 		fmt.Println("Error hashing password:", err)
@@ -114,7 +133,10 @@ func Register(ctx *fiber.Ctx) error {
 	findingUserError := db.DB.Model(&models.UserModel{}).First(&user).Error
 
 	if findingUserError != nil {
-		panic(findingUserError)
+		user = SignupResponse{
+			Email: body.Email,
+			Name:  body.Name,
+		}
 	}
 
 	return helper.SendResponse(ctx, helper.Response{

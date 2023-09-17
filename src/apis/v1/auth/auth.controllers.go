@@ -2,14 +2,13 @@ package auth
 
 import (
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/bhumit070/go_api_demo/src/constants"
 	"github.com/bhumit070/go_api_demo/src/db"
 	"github.com/bhumit070/go_api_demo/src/db/models"
 	"github.com/bhumit070/go_api_demo/src/helper"
-	"github.com/go-playground/validator/v10"
+	"github.com/bhumit070/go_api_demo/src/helper/request"
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -45,35 +44,11 @@ type LoginResponse struct {
 
 func Login(ctx *fiber.Ctx) error {
 	var body LoginBody
-	err := ctx.BodyParser(&body)
 
-	if err != nil {
-		return helper.SendResponse(ctx, helper.Response{
-			Code:    400,
-			Message: err.Error(),
-			Data:    nil,
-		})
-	}
+	shouldContinue := request.Validate(ctx, &body)
 
-	validate := validator.New()
-	err = validate.Struct(body)
-
-	if err != nil {
-		var validationErrors = make(map[string]string)
-		for _, err := range err.(validator.ValidationErrors) {
-			errorReason := err.ActualTag()
-			if err.ActualTag() == strings.ToLower(err.Field()) {
-				errorReason = "invalid"
-			}
-			validationErrors[err.Field()] = err.Field() + " is " + errorReason
-
-		}
-
-		return helper.SendResponse(ctx, helper.Response{
-			Code:    400,
-			Message: "Validation Error!",
-			Data:    validationErrors,
-		})
+	if !shouldContinue {
+		return nil
 	}
 
 	var existingUser LoginUser
@@ -120,35 +95,11 @@ func Login(ctx *fiber.Ctx) error {
 
 func Register(ctx *fiber.Ctx) error {
 	var body SignupBody
-	err := ctx.BodyParser(&body)
 
-	if err != nil {
-		return helper.SendResponse(ctx, helper.Response{
-			Code:    400,
-			Message: err.Error(),
-			Data:    nil,
-		})
-	}
+	shouldContinue := request.Validate(ctx, &body)
 
-	validate := validator.New()
-	err = validate.Struct(body)
-
-	if err != nil {
-		var validationErrors = make(map[string]string)
-		for _, err := range err.(validator.ValidationErrors) {
-			errorReason := err.ActualTag()
-			if err.ActualTag() == strings.ToLower(err.Field()) {
-				errorReason = "invalid"
-			}
-			validationErrors[err.Field()] = err.Field() + " is " + errorReason
-
-		}
-
-		return helper.SendResponse(ctx, helper.Response{
-			Code:    400,
-			Message: "Validation Error!",
-			Data:    validationErrors,
-		})
+	if !shouldContinue {
+		return nil
 	}
 
 	var existingUser SignupResponse

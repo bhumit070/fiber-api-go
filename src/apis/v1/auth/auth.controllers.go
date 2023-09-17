@@ -171,3 +171,14 @@ func ValidateToken(ctx *fiber.Ctx) error {
 		Data:    tokenInfo,
 	})
 }
+
+func Profile(ctx *fiber.Ctx) error {
+
+	response := ctx.Locals(constants.CONTEXT_USER_INFO_KEY).(SignupResponse)
+
+	return helper.SendResponse(ctx, helper.Response{
+		Code:    200,
+		Message: "Profile info has been fetched",
+		Data:    response,
+	})
+}

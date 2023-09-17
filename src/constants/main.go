@@ -10,11 +10,12 @@ import (
 var (
 	PORT string
 
-	V1_PREFIX            string = "/v1"
-	V2_PREFIX            string = "/v2"
-	SQL_DB_URL           string = ""
-	JWT_SECRET           string = ""
-	SOMETHING_WENT_WRONG string = "Something went wrong, please try again later!"
+	V1_PREFIX             string = "/v1"
+	V2_PREFIX             string = "/v2"
+	SQL_DB_URL            string = ""
+	JWT_SECRET            string = ""
+	SOMETHING_WENT_WRONG  string = "Something went wrong, please try again later!"
+	CONTEXT_USER_INFO_KEY string = "USER_DETAILS"
 )
 
 func InitEnvVariables() {

@@ -1,4 +1,4 @@
-package auth
+package authV1
 
 import (
 	"fmt"

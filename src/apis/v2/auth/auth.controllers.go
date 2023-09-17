@@ -1,4 +1,4 @@
-package auth
+package authV2
 
 import (
 	"github.com/bhumit070/go_api_demo/src/constants"

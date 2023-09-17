@@ -9,4 +9,5 @@ func RegisterAuthRoutes(versionRouter fiber.Router) {
 	authRoutes := versionRouter.Group("/auth")
 	authRoutes.Post("/login", Login)
 	authRoutes.Post("/register", Register)
+	authRoutes.Get("validate-token", ValidateToken)
 }

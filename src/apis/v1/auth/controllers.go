@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/bhumit070/go_api_demo/src/constants"
 	"github.com/bhumit070/go_api_demo/src/db"
 	"github.com/bhumit070/go_api_demo/src/db/models"
 	"github.com/bhumit070/go_api_demo/src/helper"
@@ -14,9 +15,8 @@ import (
 )
 
 type LoginBody struct {
-	Email      string `json:"email" validate:"required,email"`
-	Password   string `password:"password"`
-	ApiVersion string `json:"apiVersion"`
+	Email    string `json:"email" validate:"required,email"`
+	Password string `password:"password" validate:"required,min=6"`
 }
 
 type SignupBody struct {
@@ -33,26 +33,88 @@ type SignupResponse struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
+type LoginUser struct {
+	Password string `json:"password"`
+	SignupResponse
+}
+
+type LoginResponse struct {
+	SignupResponse
+	Token string `json:"token"`
+}
+
 func Login(ctx *fiber.Ctx) error {
 	var body LoginBody
 	err := ctx.BodyParser(&body)
 
 	if err != nil {
-		fmt.Println(err)
-		return helper.SendResponse(
-			ctx,
-			helper.Response{
-				Code:    400,
-				Data:    nil,
-				Message: err.Error(),
-			},
-		)
+		return helper.SendResponse(ctx, helper.Response{
+			Code:    400,
+			Message: err.Error(),
+			Data:    nil,
+		})
 	}
+
+	validate := validator.New()
+	err = validate.Struct(body)
+
+	if err != nil {
+		var validationErrors = make(map[string]string)
+		for _, err := range err.(validator.ValidationErrors) {
+			errorReason := err.ActualTag()
+			if err.ActualTag() == strings.ToLower(err.Field()) {
+				errorReason = "invalid"
+			}
+			validationErrors[err.Field()] = err.Field() + " is " + errorReason
+
+		}
+
+		return helper.SendResponse(ctx, helper.Response{
+			Code:    400,
+			Message: "Validation Error!",
+			Data:    validationErrors,
+		})
+	}
+
+	var existingUser LoginUser
+	findingExistingUserError := db.DB.Model(&models.UserModel{}).First(&existingUser, "email = ?", body.Email).Error
+
+	if findingExistingUserError != nil {
+		return helper.SendResponse(ctx, helper.Response{
+			Code:    400,
+			Message: "Incorrect credentials provided!",
+			Data:    nil,
+		})
+	}
+
+	comparePasswordError := bcrypt.CompareHashAndPassword([]byte(existingUser.Password), []byte(body.Password))
+
+	if comparePasswordError != nil {
+		return helper.SendResponse(ctx, helper.Response{
+			Code:    400,
+			Message: "Incorrect credentials provided!",
+			Data:    nil,
+		})
+	}
+
+	var response LoginResponse
+	response.SignupResponse = existingUser.SignupResponse
+
+	token, generatingTokenError := helper.GenerateJwt(response.ID)
+
+	if generatingTokenError != nil {
+		return helper.SendResponse(ctx, helper.Response{
+			Code:    500,
+			Message: constants.SOMETHING_WENT_WRONG,
+		})
+	}
+
+	response.Token = token
 
 	return helper.SendResponse(ctx, helper.Response{
 		Code:    200,
-		Data:    body,
 		Message: "Login Successful!",
+		Data:    response,
 	})
 }
 
@@ -95,7 +157,7 @@ func Register(ctx *fiber.Ctx) error {
 	if findingExistingUserError != nil && findingExistingUserError.Error() != "record not found" {
 		return helper.SendResponse(ctx, helper.Response{
 			Code:    400,
-			Message: "Something went wrong, please try again later!",
+			Message: constants.SOMETHING_WENT_WRONG,
 			Data:    nil,
 		})
 	}

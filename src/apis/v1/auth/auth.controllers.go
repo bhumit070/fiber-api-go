@@ -2,7 +2,6 @@ package authV1
 
 import (
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/bhumit070/go_api_demo/src/constants"
@@ -161,9 +160,8 @@ func Register(ctx *fiber.Ctx) error {
 }
 
 func ValidateToken(ctx *fiber.Ctx) error {
-	token := strings.Trim(strings.Split(string(ctx.Request().Header.Peek("Authorization")), "Bearer")[1], " ")
 
-	tokenInfo, _ := helper.VerifyJWT(token)
+	tokenInfo, _ := helper.VerifyJWT(ctx)
 
 	return helper.SendResponse(ctx, helper.Response{
 		Code:    200,

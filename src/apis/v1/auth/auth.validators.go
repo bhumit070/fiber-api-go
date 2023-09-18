@@ -1,8 +1,6 @@
 package authV1
 
 import (
-	"strings"
-
 	"github.com/bhumit070/go_api_demo/src/constants"
 	"github.com/bhumit070/go_api_demo/src/db"
 	"github.com/bhumit070/go_api_demo/src/db/models"
@@ -12,16 +10,7 @@ import (
 
 func TokenValidator(ctx *fiber.Ctx) error {
 
-	token := string(ctx.Request().Header.Peek("Authorization"))
-
-	if strings.HasPrefix(token, "Bearer") {
-		splitString := strings.Split(token, "Bearer")
-		if len(splitString) >= 2 {
-			token = strings.Trim(splitString[1], "")
-		}
-	}
-
-	tokenInfo, tokenValidationError := helper.VerifyJWT(token)
+	tokenInfo, tokenValidationError := helper.VerifyJWT(ctx)
 
 	if tokenValidationError != nil {
 		return helper.SendResponse(ctx, helper.Response{

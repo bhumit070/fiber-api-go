@@ -30,10 +30,8 @@ func RunMigration() {
 	if DB == nil {
 		return
 	}
-	err := DB.AutoMigrate(&models.UserModel{})
-	if err != nil {
-		panic("Failed to migrate!")
-	} else {
-		fmt.Println("Migration successful!")
-	}
+
+	DB.AutoMigrate(&models.UserModel{}, &models.TodoModel{})
+
+	fmt.Println("Migration successful!")
 }

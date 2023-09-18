@@ -11,7 +11,7 @@ import (
 )
 
 func GetAllTodos(ctx *fiber.Ctx) error {
-	var todos []models.GetAllTodosResponse
+	var todos GetAllTodosResponse
 	userInfo := ctx.Locals(constants.CONTEXT_USER_INFO_KEY).(authV1.SignupResponse)
 	findTodoError := db.DB.Model(&models.TodoModel{}).Find(&todos, "user_id = ?", userInfo.ID).Error
 
@@ -32,7 +32,7 @@ func GetAllTodos(ctx *fiber.Ctx) error {
 
 func CreateTodo(ctx *fiber.Ctx) error {
 
-	var body models.CreateTodoRequest
+	var body CreateTodoRequest
 	shouldContinue := request.Validate(ctx, &body)
 
 	if !shouldContinue {

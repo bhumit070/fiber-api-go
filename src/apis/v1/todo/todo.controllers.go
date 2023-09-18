@@ -11,7 +11,7 @@ import (
 )
 
 func GetAllTodos(ctx *fiber.Ctx) error {
-	var todos GetAllTodosResponse
+	var todos []GetAllTodosResponse
 	userInfo := ctx.Locals(constants.CONTEXT_USER_INFO_KEY).(authV1.SignupResponse)
 	findTodoError := db.DB.Model(&models.TodoModel{}).Find(&todos, "user_id = ?", userInfo.ID).Error
 
@@ -67,4 +67,53 @@ func CreateTodo(ctx *fiber.Ctx) error {
 		Data:    body,
 	})
 
+}
+
+func GetOneTodo(ctx *fiber.Ctx) error {
+	todoId := ctx.Params("todoId")
+
+	if todoId == "" {
+		return helper.SendResponse(ctx, helper.Response{
+			Message: "Todo id is required",
+			Code:    400,
+			Data:    nil,
+		})
+	}
+
+	var todo GetAllTodosResponse
+	findTodoError := db.DB.Model(&models.TodoModel{}).First(&todo, "id = ?", todoId).Error
+
+	if findTodoError != nil {
+		return helper.SendResponse(ctx, helper.Response{
+			Message: findTodoError.Error(),
+			Code:    404,
+			Data:    nil,
+		})
+	}
+
+	return helper.SendResponse(ctx, helper.Response{
+		Message: "Todo",
+		Code:    200,
+		Data:    todo,
+	})
+}
+
+func DeleteTodo(ctx *fiber.Ctx) error {
+	todoId := ctx.Params("todoId")
+
+	if todoId == "" {
+		return helper.SendResponse(ctx, helper.Response{
+			Message: "Todo id is required",
+			Code:    400,
+			Data:    nil,
+		})
+	}
+
+	db.DB.Delete(&models.TodoModel{}, "id = ?", todoId)
+
+	return helper.SendResponse(ctx, helper.Response{
+		Message: "Todo deleted successfully",
+		Code:    200,
+		Data:    nil,
+	})
 }

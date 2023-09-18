@@ -31,6 +31,8 @@ func TokenValidator(ctx *fiber.Ctx) error {
 		})
 	}
 
+	response.ID = uint(tokenInfo.ID)
+
 	// add custom value to Context
 	ctx.Locals(constants.CONTEXT_USER_INFO_KEY, response)
 

@@ -10,6 +10,9 @@ func RegisterTodoRoutes(versionRouter fiber.Router) {
 
 	todoRouter.Use(authV1.TokenValidator)
 
-	todoRouter.Get("/", GetAllTodos)
-	todoRouter.Post("/", CreateTodo)
+	todoRouter.
+		Get("/", GetAllTodos).
+		Get("/:todoId", GetOneTodo).
+		Post("/", CreateTodo).
+		Delete("/:todoId", DeleteTodo)
 }

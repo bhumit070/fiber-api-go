@@ -19,8 +19,8 @@ var JWT_SECRET []byte = []byte(constants.JWT_SECRET)
 
 func GenerateJwt(userId uint) (string, error) {
 	claims := &CustomJwtClaims{
-		userId,
-		jwt.RegisteredClaims{
+		ID: userId,
+		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(7 * 24 * time.Hour)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			NotBefore: jwt.NewNumericDate(time.Now()),

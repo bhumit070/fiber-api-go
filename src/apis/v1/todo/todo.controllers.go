@@ -13,7 +13,9 @@ import (
 func GetAllTodos(ctx *fiber.Ctx) error {
 	var todos []GetAllTodosResponse
 	userInfo := ctx.Locals(constants.CONTEXT_USER_INFO_KEY).(authV1.SignupResponse)
-	findTodoError := db.DB.Model(&models.TodoModel{}).Find(&todos, "user_id = ?", userInfo.ID).Error
+	findTodoError := db.DB.Model(&models.TodoModel{}).
+		Where("user_id = ?", userInfo.ID).
+		Find(&todos).Error
 
 	if findTodoError != nil {
 		return helper.SendResponse(ctx, helper.Response{
@@ -81,7 +83,9 @@ func GetOneTodo(ctx *fiber.Ctx) error {
 	}
 
 	var todo GetAllTodosResponse
-	findTodoError := db.DB.Model(&models.TodoModel{}).First(&todo, "id = ?", todoId).Error
+	findTodoError := db.DB.Model(&models.TodoModel{}).
+		Preload("UserInfo").
+		First(&todo, "id = ?", todoId).Error
 
 	if findTodoError != nil {
 		return helper.SendResponse(ctx, helper.Response{

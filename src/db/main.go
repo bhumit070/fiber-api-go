@@ -7,13 +7,14 @@ import (
 	"github.com/bhumit070/go_api_demo/src/db/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 var DB *gorm.DB = nil
 
 func InitDB() {
 	db, err := gorm.Open(postgres.Open(constants.SQL_DB_URL), &gorm.Config{
-		Logger: nil,
+		Logger: logger.Default.LogMode(logger.Info),
 	})
 
 	if err != nil {

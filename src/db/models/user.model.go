@@ -7,14 +7,13 @@ import (
 )
 
 type UserModel struct {
-	gorm.Model
-	ID        uint         `gorm:"primaryKey" json:"id"`
-	Name      string       `gorm:"not null" json:"name"`
-	Email     string       `gorm:"unique" json:"email"`
-	Password  string       `gorm:"not null" json:"password"`
-	CreatedAt time.Time    `gorm:"autoCreateTime" json:"createdAt"`
-	UpdatedAt time.Time    `gorm:"autoCreateTime" json:"updatedAt"`
-	DeletedAt time.Time    `gorm:"default:null" json:"deletedAt,omitempty"`
+	ID        uint         `gorm:"primaryKey" json:"id,omitempty"`
+	Name      string       `gorm:"not null" json:"name,omitempty"`
+	Email     string       `gorm:"unique" json:"email,omitempty"`
+	Password  string       `gorm:"not null" json:"password,omitempty"`
+	CreatedAt time.Time    `gorm:"autoCreateTime" json:"-"`
+	UpdatedAt time.Time    `gorm:"autoCreateTime" json:"-"`
+	DeletedAt time.Time    `gorm:"default:null" json:"-"`
 	Todos     *[]TodoModel `gorm:"foreignKey:UserID" json:"todos,omitempty"`
 }
 

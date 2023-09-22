@@ -8,6 +8,7 @@ import (
 	"github.com/bhumit070/go_api_demo/src/helper"
 	"github.com/bhumit070/go_api_demo/src/helper/request"
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 )
 
 func GetAllTodos(ctx *fiber.Ctx) error {
@@ -82,10 +83,12 @@ func GetOneTodo(ctx *fiber.Ctx) error {
 		})
 	}
 
-	var todo GetAllTodosResponse
+	var todo GetOneTodosResponse
 	findTodoError := db.DB.Model(&models.TodoModel{}).
-		Preload("UserInfo").
-		First(&todo, "id = ?", todoId).Error
+		Preload("UserInfo", func(db *gorm.DB) *gorm.DB {
+			return db.Select("id, name", "email")
+		}).
+		Find(&todo, "id = ?", todoId).Error
 
 	if findTodoError != nil {
 		return helper.SendResponse(ctx, helper.Response{

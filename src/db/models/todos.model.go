@@ -2,12 +2,9 @@ package models
 
 import (
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type TodoModel struct {
-	gorm.Model
 	ID          uint       `gorm:"primaryKey" json:"id"`
 	Title       string     `gorm:"not null" json:"name"`
 	Description string     `gorm:"not null" json:"description"`

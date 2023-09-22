@@ -5,12 +5,19 @@ import (
 )
 
 type GetAllTodosResponse struct {
-	ID          uint              `gorm:"primaryKey" json:"id"`
-	Title       string            `gorm:"not null" json:"name"`
-	Description string            `gorm:"not null" json:"description"`
-	IsCompleted bool              `gorm:"default:false" json:"isCompleted"`
-	UserID      uint              `gorm:"not null" json:"userId"`
-	UserInfo    *models.UserModel `gorm:"foreignKey:UserID" json:"userInfo"`
+	ID          uint   `json:"id"`
+	Title       string `json:"name"`
+	Description string `json:"description"`
+	IsCompleted bool   `json:"isCompleted"`
+}
+
+type GetOneTodosResponse struct {
+	ID          uint             `json:"id"`
+	Title       string           `json:"name"`
+	Description string           `json:"description"`
+	IsCompleted bool             `json:"isCompleted"`
+	UserID      uint             `gorm:"foreignKey:ID" json:"-"`
+	UserInfo    models.UserModel `json:"userInfo" gorm:"foreignKey:UserID"`
 }
 
 type CreateTodoRequest struct {
